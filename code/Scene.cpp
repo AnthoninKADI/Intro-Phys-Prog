@@ -6,20 +6,6 @@
 #include "Intersections.h"
 #include "Broadphase.h"
 
-
-/*
-========================================================================================================
-
-Scene
-
-========================================================================================================
-*/
-
-/*
-====================================================
-Scene::~Scene
-====================================================
-*/
 Scene::~Scene()
 {
 	for (auto& bodie : bodies)
@@ -29,11 +15,6 @@ Scene::~Scene()
 	bodies.clear();
 }
 
-/*
-====================================================
-Scene::Reset
-====================================================
-*/
 void Scene::Reset()
 {
 	for (auto& bodie : bodies)
@@ -45,17 +26,12 @@ void Scene::Reset()
 	Initialize();
 }
 
-/*
-====================================================
-Scene::Initialize
-====================================================
-*/
 void Scene::Initialize()
 {
 	Body body;
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < 1; ++i) // Number balls  (first spawn)
 	{
-		for (int j = 0; j < 6; ++j)
+		for (int j = 0; j < 3; ++j) // Number balls (first spawn)
 		{
 			float radius = 0.5f;
 			float x = (i - 1) * radius * 1.5f;
@@ -70,9 +46,26 @@ void Scene::Initialize()
 			bodies.push_back(body);
 		}
 	}
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 1; ++i) // Number balls  (second spawn)
 	{
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < 1; ++j) // Number balls (second spawn)
+		{
+			float radius = 0.5f;
+			float x = (i - 1) * radius * 1.5f;
+			float y = (j - 1) * radius * 1.5f;
+			body.position = Vec3(x + 2, y + 1, 10);
+			body.orientation = Quat(0, 0, 0, 1);
+			body.shape = new ShapeSphere(radius);
+			body.inverseMass = 1.0f;
+			body.elasticity = 0.5f;
+			body.friction = 0.5f;
+			body.linearVelocity.Zero();
+			bodies.push_back(body);
+		}
+	}
+	for (int i = 0; i < 3; ++i)    // Surface Size
+	{
+		for (int j = 0; j < 3; ++j)  // Surface Size
 		{
 			float radius = 80.0f;
 			float x = (i - 1) * radius * 0.25f;
@@ -88,11 +81,6 @@ void Scene::Initialize()
 	}
 }
 
-/*
-====================================================
-Scene::Update
-====================================================
-*/
 void Scene::Update(const float dt_sec)
 {
 	// Gravity
