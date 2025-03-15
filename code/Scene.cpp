@@ -42,21 +42,21 @@ void Scene::Initialize()
 	earth->friction = 0.5f;
 	bodies.push_back(earth);
 
-	if(player1 == nullptr)
+	if(firstShooter == nullptr)
 	{
-		player1 = new Player(Name::Player1);
+		firstShooter = new Player(Name::FirstShooter);
 	}
-	if(player2 == nullptr)
+	if(secondShooter == nullptr)
 	{
-		player2 = new Player(Name::Player2);
+		secondShooter = new Player(Name::SecondShooter);
 	} 
 	if (winner == nullptr)
 	{
-		currentPlayer = player1;
+		currentShooter = firstShooter;
 	}
 	else
 	{
-		currentPlayer = winner;
+		currentShooter = winner;
 	} 
 }
 
@@ -140,7 +140,7 @@ void Scene::Update(const float dt_sec)
 		}
 		else if (turnFirst)
 		{
-			currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player2;
+			currentShooter == firstShooter ? currentShooter = secondShooter : currentShooter = secondShooter;
 			turnFirst = false;
 		}
 		currentBall = nullptr;
@@ -168,11 +168,11 @@ void Scene::BallSpawn(const Vec3& cameraPos, const Vec3& cameraFocusPoint, float
 	{
 		return;
 	}
-	if (currentPlayer == nullptr)
+	if (currentShooter == nullptr)
 	{
 		return;
 	}
-	if (!currentPlayer->canShoot())
+	if (!currentShooter->canShoot())
 	{
 		return;
 	}
@@ -187,20 +187,20 @@ void Scene::BallSpawn(const Vec3& cameraPos, const Vec3& cameraFocusPoint, float
 	}
 	else
 	{
-		currentPlayer->shoot();
+		currentShooter->shoot();
 		type = Type::ball;
 		radius = 0.8f;
 	}
 	start = std::chrono::system_clock::now();
-	currentBall = new Ball(type, currentPlayer);
+	currentBall = new Ball(type, currentShooter);
 	currentBall->position = cameraPos + dir * 20;
 	dir.z += 0.1f;
 	currentBall->linearVelocity = dir * 35 * std::min(std::max(0.8f,strength) , 1.5f);
 	currentBall->orientation = Quat(0,0,0,1);
 	currentBall->shape = new ShapeSphere(radius);
-	currentBall->inverseMass = 3.0f;
-	currentBall->elasticity = 0.1f;
-	currentBall->friction = 0.5f;
+	currentBall->inverseMass = 3.1f;
+	currentBall->elasticity = 0.2f;
+	currentBall->friction = 0.4f;
 	if (shootFirst)
 	{
 		jack = currentBall;

@@ -22,9 +22,9 @@ public:
 
 private:
 	class Body* earth = nullptr;
-	class Player* player1 = nullptr;
-	class Player* player2 = nullptr;
-	class Player* currentPlayer = nullptr;
+	class Player* firstShooter = nullptr;
+	class Player* secondShooter = nullptr;
+	class Player* currentShooter = nullptr;
 	class Player* winner = nullptr;
 	class Ball* jack = nullptr;
 	std::vector<class Ball*> balls;

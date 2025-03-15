@@ -27,8 +27,8 @@ public:
 	VkSemaphore m_vkImageAvailableSemaphore;
 	VkSemaphore m_vkRenderFinishedSemaphore;
 
-	int m_windowWidth;
-	int m_windowHeight;
+	int window_width;
+	int window_height;
 
 	VkSwapchainKHR m_vkSwapChain;
 	VkExtent2D m_vkExtent;

@@ -42,23 +42,23 @@ void Application::Initialize()
 	scene = new Scene;
 	scene->Initialize();
 	scene->Reset();
-	m_models.reserve( scene->bodies.size() );
+	models_.reserve( scene->bodies.size() );
 	
 	for ( int i = 0; i < scene->bodies.size(); i++ )
 	{
 		Model * model = new Model();
 		model->BuildFromShape( scene->bodies[ i ]->shape );
 		model->MakeVBO( &deviceContext );
-		m_models.push_back( model );
+		models_.push_back( model );
 	}
 
-	m_mousePosition = Vec2( 0, 0 );
-	m_cameraPositionT = acosf( -1.0f ) / 2.0f;
-	m_cameraPositionP = 0;
-	m_cameraRadius = 20.0f;
-	m_cameraFocusPoint = Vec3( 0, 0, 3 );
-	m_isPaused = false;
-	m_frameStep = false;
+	mouse_position_ = Vec2( 0, 0 );
+	camera_position_t_ = acosf( -1.0f ) / 2.0f;
+	camera_position_p_ = 0;
+	camera_radius_ = 20.0f;
+	camera_focus_point_ = Vec3( 0, 0, 3 );
+	is_paused_ = false;
+	frame_step_ = false;
 }
 
 Application::~Application()
@@ -143,18 +143,18 @@ bool Application::InitializeVulkan()
 		return false;
 	}
 
-	m_uniformBuffer.Allocate( &deviceContext, NULL, sizeof( float ) * 16 * 4 * 128, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT );
-	InitOffscreen( &deviceContext, deviceContext.m_swapChain.m_windowWidth, deviceContext.m_swapChain.m_windowHeight );
+	uniform_buffer_.Allocate( &deviceContext, NULL, sizeof( float ) * 16 * 4 * 128, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT );
+	InitOffscreen( &deviceContext, deviceContext.swap_chain.window_width, deviceContext.swap_chain.window_height );
 
 	{
 		bool result;
-		FillFullScreenQuad( m_modelFullScreen );
-		for ( int i = 0; i < m_modelFullScreen.m_vertices.size(); i++ )
+		FillFullScreenQuad( model_full_screen_ );
+		for ( int i = 0; i < model_full_screen_.vertices.size(); i++ )
 		{
-			m_modelFullScreen.m_vertices[ i ].xyz[ 1 ] *= -1.0f;
+			model_full_screen_.vertices[ i ].xyz[ 1 ] *= -1.0f;
 		}
-		m_modelFullScreen.MakeVBO( &deviceContext );
-		result = m_copyShader.Load( &deviceContext, "DebugImage2D" );
+		model_full_screen_.MakeVBO( &deviceContext );
+		result = copy_shader_.Load( &deviceContext, "DebugImage2D" );
 		if ( !result )
 		{
 			printf( "Failed to load copy shader\n" );
@@ -166,7 +166,7 @@ bool Application::InitializeVulkan()
 		memset( &descriptorParms, 0, sizeof( descriptorParms ) );
 		descriptorParms.numUniformsFragment = 1;
 		descriptorParms.numImageSamplers = 1;
-		result = m_copyDescriptors.Create( &deviceContext, descriptorParms );
+		result = copy_descriptors_.Create( &deviceContext, descriptorParms );
 		if ( !result )
 		{
 			printf( "Failed to create copy descriptors\n" );
@@ -176,15 +176,15 @@ bool Application::InitializeVulkan()
 
 		Pipeline::CreateParms_t pipelineParms;
 		memset( &pipelineParms, 0, sizeof( pipelineParms ) );
-		pipelineParms.renderPass = deviceContext.m_swapChain.m_vkRenderPass;
-		pipelineParms.descriptors = &m_copyDescriptors;
-		pipelineParms.shader = &m_copyShader;
-		pipelineParms.width = deviceContext.m_swapChain.m_windowWidth;
-		pipelineParms.height = deviceContext.m_swapChain.m_windowHeight;
+		pipelineParms.renderPass = deviceContext.swap_chain.m_vkRenderPass;
+		pipelineParms.descriptors = &copy_descriptors_;
+		pipelineParms.shader = &copy_shader_;
+		pipelineParms.width = deviceContext.swap_chain.window_width;
+		pipelineParms.height = deviceContext.swap_chain.window_height;
 		pipelineParms.cullMode = Pipeline::CULL_MODE_NONE;
 		pipelineParms.depthTest = false;
 		pipelineParms.depthWrite = false;
-		result = m_copyPipeline.Create( &deviceContext, pipelineParms );
+		result = copy_pipeline_.Create( &deviceContext, pipelineParms );
 		if ( !result )
 		{
 			printf( "Failed to create copy pipeline\n" );
@@ -200,21 +200,21 @@ void Application::Cleanup()
 {
 	CleanupOffscreen( &deviceContext );
 
-	m_copyShader.Cleanup( &deviceContext );
-	m_copyDescriptors.Cleanup( &deviceContext );
-	m_copyPipeline.Cleanup( &deviceContext );
-	m_modelFullScreen.Cleanup( deviceContext );
+	copy_shader_.Cleanup( &deviceContext );
+	copy_descriptors_.Cleanup( &deviceContext );
+	copy_pipeline_.Cleanup( &deviceContext );
+	model_full_screen_.Cleanup( deviceContext );
 	
 	delete scene;
 	scene = NULL;
 	
-	for ( int i = 0; i < m_models.size(); i++ )
+	for ( int i = 0; i < models_.size(); i++ )
 	{
-		m_models[ i ]->Cleanup( deviceContext );
-		delete m_models[ i ];
+		models_[ i ]->Cleanup( deviceContext );
+		delete models_[ i ];
 	}
-	m_models.clear();
-	m_uniformBuffer.Cleanup( &deviceContext );
+	models_.clear();
+	uniform_buffer_.Cleanup( &deviceContext );
 	Samplers::Cleanup( &deviceContext );
 	deviceContext.Cleanup();
 	glfwDestroyWindow( glfwWindow );
@@ -237,18 +237,18 @@ void Application::ResizeWindow( int windowWidth, int windowHeight )
 	deviceContext.ResizeWindow( windowWidth, windowHeight );
 	{
 		bool result;
-		m_copyPipeline.Cleanup( &deviceContext );
+		copy_pipeline_.Cleanup( &deviceContext );
 		Pipeline::CreateParms_t pipelineParms;
 		memset( &pipelineParms, 0, sizeof( pipelineParms ) );
-		pipelineParms.renderPass = deviceContext.m_swapChain.m_vkRenderPass;
-		pipelineParms.descriptors = &m_copyDescriptors;
-		pipelineParms.shader = &m_copyShader;
+		pipelineParms.renderPass = deviceContext.swap_chain.m_vkRenderPass;
+		pipelineParms.descriptors = &copy_descriptors_;
+		pipelineParms.shader = &copy_shader_;
 		pipelineParms.width = windowWidth;
 		pipelineParms.height = windowHeight;
 		pipelineParms.cullMode = Pipeline::CULL_MODE_NONE;
 		pipelineParms.depthTest = false;
 		pipelineParms.depthWrite = false;
-		result = m_copyPipeline.Create( &deviceContext, pipelineParms );
+		result = copy_pipeline_.Create( &deviceContext, pipelineParms );
 		if ( !result )
 		{
 			printf( "Unable to build pipeline!\n" );
@@ -267,34 +267,35 @@ void Application::OnMouseMoved( GLFWwindow * window, double x, double y )
 void Application::MouseMoved( float x, float y )
 {
 	Vec2 newPosition = Vec2( x, y );
-	Vec2 ds = newPosition - m_mousePosition;
-	m_mousePosition = newPosition;
+	Vec2 ds = newPosition - mouse_position_;
+	mouse_position_ = newPosition;
 	float sensitivity = 0.01f;
-	m_cameraPositionT += ds.y * -sensitivity;
-	m_cameraPositionP += ds.x * -sensitivity;
+	camera_position_t_ += ds.y * -sensitivity;
+	camera_position_p_ += ds.x * -sensitivity;
 	
-	if ( m_cameraPositionT < 0.14f )
+	if ( camera_position_t_ < 0.14f )
 	{
-		m_cameraPositionT = 0.14f;
+		camera_position_t_ = 0.14f;
 	}
-	if ( m_cameraPositionT > 1.7f )
+	if ( camera_position_t_ > 1.7f )
 	{
-		m_cameraPositionT = 1.7f;
+		camera_position_t_ = 1.7f;
 	}
 
-	if ( m_cameraPositionP < -1.57f )
+	if ( camera_position_p_ < -1.57f )
 	{
-		m_cameraPositionP = -1.57f;
+		camera_position_p_ = -1.57f;
 	}
-	if ( m_cameraPositionP > 1.57f )
+	if ( camera_position_p_ > 1.57f )
 	{
-		m_cameraPositionP = 1.57f;
+		camera_position_p_ = 1.57f;
 	}
 }
 
 void Application::OnMouseWheelScrolled( GLFWwindow * window, double x, double y )
 {
-	Application * application = reinterpret_cast< Application * >( glfwGetWindowUserPointer( window ) );
+	Application * application = reinterpret_cast< Application *
+		>( glfwGetWindowUserPointer( window ) );
 	application->MouseScrolled( (float)y );
 }
 
@@ -305,13 +306,15 @@ void Application::MouseScrolled( float z )
 
 void Application::OnKeyboard( GLFWwindow * window, int key, int scancode, int action, int modifiers )
 {
-	Application * application = reinterpret_cast< Application * >( glfwGetWindowUserPointer( window ) );
+	Application * application = reinterpret_cast< Application *
+		>( glfwGetWindowUserPointer( window ) );
 	application->Keyboard( key, scancode, action, modifiers );
 }
 
 void Application::OnMouseButton(GLFWwindow* window, int button, int action, int mods)
 {
-	Application * application = reinterpret_cast< Application * >( glfwGetWindowUserPointer( window ) );
+	Application * application = reinterpret_cast< Application *
+		>( glfwGetWindowUserPointer( window ) );
 	application->MouseButton( button, action, mods );
 }
 
@@ -326,7 +329,7 @@ void Application::MouseButton(int button, int action, int mods)
 	{
 		end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float> duration = end - start;
-		scene->BallSpawn(m_camPos, m_cameraFocusPoint, duration.count());
+		scene->BallSpawn(cam_pos_, camera_focus_point_, duration.count());
 	}
 }
 
@@ -362,14 +365,14 @@ void Application::MainLoop()
 		}
 
 		bool runPhysics = true;
-		if ( m_isPaused )
+		if ( is_paused_ )
 		{
 			dt_us = 0.0f;
 			runPhysics = false;
-			if ( m_frameStep )
+			if ( frame_step_ )
 			{
 				dt_us = 16667.0f;
-				m_frameStep = false;
+				frame_step_ = false;
 				runPhysics = true;
 			}
 			numSamples = 0;
@@ -398,14 +401,14 @@ void Application::MainLoop()
 		DrawFrame();
 		if(scene->EndUpdate())
 		{
-			m_models.clear();
-			m_models.reserve( scene->bodies.size() );
+			models_.clear();
+			models_.reserve( scene->bodies.size() );
 			for ( int i = 0; i < scene->bodies.size(); i++ )
 			{
 				Model * model = new Model();
 				model->BuildFromShape( scene->bodies[ i ]->shape );
 				model->MakeVBO( &deviceContext );
-				m_models.push_back( model );
+				models_.push_back( model );
 			}
 		}
 	}
@@ -427,17 +430,17 @@ void Application::UpdateUniforms()
 	camera_t camera;
 
 	{
-		unsigned char * mappedData = (unsigned char *)m_uniformBuffer.MapBuffer( &deviceContext );
+		unsigned char * mappedData = (unsigned char *)uniform_buffer_.MapBuffer( &deviceContext );
 		{
-			m_camPos = Vec3( 10, 0, 5 ) * 1.25f;
+			cam_pos_ = Vec3( 10, 0, 5 ) * 1.25f;
 			Vec3 camLookAt = Vec3( 0, 0, 1 );
 			Vec3 camUp = Vec3( 0, 0, 1 );
-			m_camPos.x = cosf( m_cameraPositionP ) * sinf( m_cameraPositionT );
-			m_camPos.y = sinf( m_cameraPositionP ) * sinf( m_cameraPositionT );
-			m_camPos.z = cosf( m_cameraPositionT );
-			m_camPos *= m_cameraRadius;
-			m_camPos += m_cameraFocusPoint;
-			camLookAt = m_cameraFocusPoint;
+			cam_pos_.x = cosf( camera_position_p_ ) * sinf( camera_position_t_ );
+			cam_pos_.y = sinf( camera_position_p_ ) * sinf( camera_position_t_ );
+			cam_pos_.z = cosf( camera_position_t_ );
+			cam_pos_ *= camera_radius_;
+			cam_pos_ += camera_focus_point_;
+			camLookAt = camera_focus_point_;
 
 			int windowWidth;
 			int windowHeight;
@@ -448,7 +451,7 @@ void Application::UpdateUniforms()
 			const float aspect	= (float)windowHeight / (float)windowWidth;
 			camera.matProj.PerspectiveVulkan( fovy, aspect, zNear, zFar );
 			camera.matProj = camera.matProj.Transpose();
-			camera.matView.LookAt( m_camPos, camLookAt, camUp );
+			camera.matView.LookAt( cam_pos_, camLookAt, camUp );
 			camera.matView = camera.matView.Transpose();
 			memcpy( mappedData + uboByteOffset, &camera, sizeof( camera ) );
 			cameraByteOFfset = uboByteOffset;
@@ -462,7 +465,6 @@ void Application::UpdateUniforms()
 			Vec3 tmp = camPos.Cross( camUp );
 			camUp = tmp.Cross( camPos );
 			camUp.Normalize();
-
 			extern FrameBuffer g_shadowFrameBuffer;
 			const int windowWidth = g_shadowFrameBuffer.m_parms.width;
 			const int windowHeight = g_shadowFrameBuffer.m_parms.height;
@@ -492,7 +494,7 @@ void Application::UpdateUniforms()
 			matOrient = matOrient.Transpose();
 			memcpy( mappedData + uboByteOffset, matOrient.ToPtr(), sizeof( matOrient ) );
 			RenderModel renderModel;
-			renderModel.model = m_models[ i ];
+			renderModel.model = models_[ i ];
 			renderModel.uboByteOffset = uboByteOffset;
 			renderModel.uboByteSize = sizeof( matOrient );
 			renderModel.pos = body.position;
@@ -500,7 +502,7 @@ void Application::UpdateUniforms()
 			m_renderModels.push_back( renderModel );
 			uboByteOffset += deviceContext.GetAligendUniformByteOffset( sizeof( matOrient ) );
 		}
-		m_uniformBuffer.UnmapBuffer( &deviceContext );
+		uniform_buffer_.UnmapBuffer( &deviceContext );
 	}
 }
 
@@ -508,16 +510,16 @@ void Application::DrawFrame()
 {
 	UpdateUniforms();
 	const uint32_t imageIndex = deviceContext.BeginFrame();
-	DrawOffscreen( &deviceContext, imageIndex, &m_uniformBuffer, m_renderModels.data(), (int)m_renderModels.size() );
+	DrawOffscreen( &deviceContext, imageIndex, &uniform_buffer_, m_renderModels.data(), (int)m_renderModels.size() );
  	deviceContext.BeginRenderPass();
 	{
 		extern FrameBuffer g_offscreenFrameBuffer;
 		VkCommandBuffer cmdBuffer = deviceContext.m_vkCommandBuffers[ imageIndex ];
-		m_copyPipeline.BindPipeline( cmdBuffer );
-		Descriptor descriptor = m_copyPipeline.GetFreeDescriptor();
+		copy_pipeline_.BindPipeline( cmdBuffer );
+		Descriptor descriptor = copy_pipeline_.GetFreeDescriptor();
 		descriptor.BindImage( VK_IMAGE_LAYOUT_GENERAL, g_offscreenFrameBuffer.m_imageColor.m_vkImageView, Samplers::m_samplerStandard, 0 );
-		descriptor.BindDescriptor( &deviceContext, cmdBuffer, &m_copyPipeline );
-		m_modelFullScreen.DrawIndexed( cmdBuffer );
+		descriptor.BindDescriptor( &deviceContext, cmdBuffer, &copy_pipeline_ );
+		model_full_screen_.DrawIndexed( cmdBuffer );
 	}
  	deviceContext.EndRenderPass();
 	deviceContext.EndFrame();

@@ -61,8 +61,8 @@ SwapChain::Create
 bool SwapChain::Create( DeviceContext * device, int width, int height ) {
 	VkResult result;
 
-	m_windowWidth = width;
-	m_windowHeight = height;
+	window_width = width;
+	window_height = height;
 
 	m_vkExtent.width = width;
 	m_vkExtent.height = height;
@@ -465,8 +465,8 @@ void SwapChain::BeginRenderPass( DeviceContext * device ) {
 	VkViewport viewport = {};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
-	viewport.width = (float)m_windowWidth;
-	viewport.height = (float)m_windowHeight;
+	viewport.width = (float)window_width;
+	viewport.height = (float)window_height;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 	vkCmdSetViewport( device->m_vkCommandBuffers[ m_currentImageIndex ], 0, 1, &viewport );
@@ -474,8 +474,8 @@ void SwapChain::BeginRenderPass( DeviceContext * device ) {
 	VkRect2D scissor = {};
 	scissor.offset.x = 0;
 	scissor.offset.y = 0;
-	scissor.extent.width = m_windowWidth;
-	scissor.extent.height = m_windowHeight;
+	scissor.extent.width = window_width;
+	scissor.extent.height = window_height;
 	vkCmdSetScissor( device->m_vkCommandBuffers[ m_currentImageIndex ], 0, 1, &scissor );
 }
 

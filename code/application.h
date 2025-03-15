@@ -18,7 +18,7 @@
 class Application
 {
 public:
-	Application() : m_isPaused( false ), m_frameStep( false ) {}
+	Application() : is_paused_( false ), frame_step_( false ) {}
 	~Application();
 	void Initialize();
 	void MainLoop();
@@ -43,20 +43,20 @@ private:
 	class Scene * scene;
 	GLFWwindow * glfwWindow;
 	DeviceContext deviceContext;
-	Buffer m_uniformBuffer;
-	Model m_modelFullScreen;
-	std::vector< Model * > m_models;	
-	Shader		m_copyShader;
-	Descriptors	m_copyDescriptors;
-	Pipeline	m_copyPipeline;
-	Vec2 m_mousePosition;
-	Vec3 m_cameraFocusPoint;
-	Vec3 m_camPos;
-	float m_cameraPositionT;
-	float m_cameraPositionP;
-	float m_cameraRadius;
-	bool m_isPaused;
-	bool m_frameStep;
+	Buffer uniform_buffer_;
+	Model model_full_screen_;
+	std::vector< Model * > models_;	
+	Shader		copy_shader_;
+	Descriptors	copy_descriptors_;
+	Pipeline	copy_pipeline_;
+	Vec2 mouse_position_;
+	Vec3 camera_focus_point_;
+	Vec3 cam_pos_;
+	float camera_position_t_;
+	float camera_position_p_;
+	float camera_radius_;
+	bool is_paused_;
+	bool frame_step_;
 	std::vector< RenderModel > m_renderModels;
 	static const int WINDOW_WIDTH = 1200;
 	static const int WINDOW_HEIGHT = 720;

@@ -118,7 +118,7 @@ void FillFullScreenQuad(Model& model) {
 	screenIndices[5] = 3;
 
 	for (int i = 0; i < numVerts; i++) {
-		model.m_vertices.push_back(screenVerts[i]);
+		model.vertices.push_back(screenVerts[i]);
 	}
 
 	for (int i = 0; i < numIdxs; i++) {
@@ -197,7 +197,7 @@ void FillCube(Model& model) {
 	}
 
 	for (int i = 0; i < numVerts; i++) {
-		model.m_vertices.push_back(cubeVerts[i]);
+		model.vertices.push_back(cubeVerts[i]);
 	}
 
 	for (int i = 0; i < numIdxs; i++) {
@@ -326,7 +326,7 @@ void FillCubeTessellated(Model& model, int numDivisions) {
 	}
 
 	for (int i = 0; i < numVerts; i++) {
-		model.m_vertices.push_back(cubeVerts[i]);
+		model.vertices.push_back(cubeVerts[i]);
 	}
 
 	for (int i = 0; i < numIdxs; i++) {
@@ -360,28 +360,28 @@ void FillSphere(Model& model, const float radius) {
 	FillCubeTessellated(model, (int)s);
 
 	// Project the tessellated cube onto a sphere
-	for (int i = 0; i < model.m_vertices.size(); i++) {
-		Vec3 xyz = model.m_vertices[i].xyz;
+	for (int i = 0; i < model.vertices.size(); i++) {
+		Vec3 xyz = model.vertices[i].xyz;
 		xyz.Normalize();
 
-		model.m_vertices[i].xyz[0] = xyz[0];
-		model.m_vertices[i].xyz[1] = xyz[1];
-		model.m_vertices[i].xyz[2] = xyz[2];
+		model.vertices[i].xyz[0] = xyz[0];
+		model.vertices[i].xyz[1] = xyz[1];
+		model.vertices[i].xyz[2] = xyz[2];
 
-		model.m_vertices[i].norm[0] = FloatToByte_n11(xyz[0]);
-		model.m_vertices[i].norm[1] = FloatToByte_n11(xyz[1]);
-		model.m_vertices[i].norm[2] = FloatToByte_n11(xyz[2]);
-		model.m_vertices[i].norm[3] = FloatToByte_n11(0.0f);
+		model.vertices[i].norm[0] = FloatToByte_n11(xyz[0]);
+		model.vertices[i].norm[1] = FloatToByte_n11(xyz[1]);
+		model.vertices[i].norm[2] = FloatToByte_n11(xyz[2]);
+		model.vertices[i].norm[3] = FloatToByte_n11(0.0f);
 
-		Vec3 tang = Byte4ToVec3(model.m_vertices[i].norm);
+		Vec3 tang = Byte4ToVec3(model.vertices[i].norm);
 		Vec3 bitang = xyz.Cross(tang);
 		bitang.Normalize();
 		tang = bitang.Cross(xyz);
 
-		model.m_vertices[i].tang[0] = FloatToByte_n11(tang[0]);
-		model.m_vertices[i].tang[1] = FloatToByte_n11(tang[1]);
-		model.m_vertices[i].tang[2] = FloatToByte_n11(tang[2]);
-		model.m_vertices[i].tang[3] = FloatToByte_n11(0.0f);
+		model.vertices[i].tang[0] = FloatToByte_n11(tang[0]);
+		model.vertices[i].tang[1] = FloatToByte_n11(tang[1]);
+		model.vertices[i].tang[2] = FloatToByte_n11(tang[2]);
+		model.vertices[i].tang[3] = FloatToByte_n11(0.0f);
 	}
 }
 
@@ -397,13 +397,13 @@ bool Model::BuildFromShape(const Shape* shape) {
 	if (shape->GetType() == Shape::ShapeType::SHAPE_SPHERE) {
 		const ShapeSphere* shapeSphere = (const ShapeSphere*)shape;
 
-		m_vertices.clear();
+		vertices.clear();
 		m_indices.clear();
 
 		FillSphere(*this, shapeSphere->radius);
-		for (int v = 0; v < m_vertices.size(); v++) {
+		for (int v = 0; v < vertices.size(); v++) {
 			for (int i = 0; i < 3; i++) {
-				m_vertices[v].xyz[i] *= shapeSphere->radius;
+				vertices[v].xyz[i] *= shapeSphere->radius;
 			}
 		}
 	}
@@ -504,8 +504,8 @@ bool Model::BuildFromShape(const Shape* shape) {
 		int bufferSize;
 
 		// Create Vertex Buffer
-		bufferSize = (int)(sizeof(m_vertices[0]) * m_vertices.size());
-		if (!m_vertexBuffer.Allocate(device, m_vertices.data(), bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)) {
+		bufferSize = (int)(sizeof(vertices[0]) * vertices.size());
+		if (!m_vertexBuffer.Allocate(device, vertices.data(), bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)) {
 			printf("failed to allocate vertex buffer!\n");
 			assert(0);
 			return false;

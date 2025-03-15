@@ -270,7 +270,7 @@ DeviceContext::Cleanup
 ====================================================
 */
 void DeviceContext::Cleanup() {
-	m_swapChain.Cleanup( this );
+	swap_chain.Cleanup( this );
 
 	// Destroy Command Buffers
 	vkFreeCommandBuffers( m_vkDevice, m_vkCommandPool, (uint32_t)m_vkCommandBuffers.size(), m_vkCommandBuffers.data() );

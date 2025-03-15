@@ -93,15 +93,15 @@ public:
 	//
 	//	Swap chain related
 	//
-	SwapChain m_swapChain;
-	bool CreateSwapChain( int width, int height ) { return m_swapChain.Create( this, width, height ); }
-	void ResizeWindow( int width, int height ) { m_swapChain.Resize( this, width, height ); }
+	SwapChain swap_chain;
+	bool CreateSwapChain( int width, int height ) { return swap_chain.Create( this, width, height ); }
+	void ResizeWindow( int width, int height ) { swap_chain.Resize( this, width, height ); }
 
-	uint32_t BeginFrame() { return m_swapChain.BeginFrame( this ); }
-	void EndFrame() { m_swapChain.EndFrame( this ); }
+	uint32_t BeginFrame() { return swap_chain.BeginFrame( this ); }
+	void EndFrame() { swap_chain.EndFrame( this ); }
 
-	void BeginRenderPass() { m_swapChain.BeginRenderPass( this ); }
-	void EndRenderPass() { m_swapChain.EndRenderPass( this ); }
+	void BeginRenderPass() { swap_chain.BeginRenderPass( this ); }
+	void EndRenderPass() { swap_chain.EndRenderPass( this ); }
 
 
 	int GetAligendUniformByteOffset( const int offset ) const;

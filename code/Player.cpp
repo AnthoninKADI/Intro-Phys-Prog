@@ -8,32 +8,6 @@ Player::~Player()
 {
 }
 
-Name Player::getName()
-{
-	return Name();
-}
-
-std::string Player::getStringName()
-{
-	std::string strName = "";
-	switch (name)
-	{
-	case Name::None:
-		strName = "None";
-		break;
-	case Name::Player1:
-		strName = "Player 1";
-		break;
-	case Name::Player2:
-		strName = "Player 2";
-		break;
-	default:
-		strName = "Error";
-		break;
-	}
-	return strName;
-}
-
 int Player::getShootLeft()
 {
 	return shootLeft;
@@ -54,12 +28,30 @@ void Player::shoot()
 	shootLeft--;
 }
 
-int Player::getScore()
+Name Player::getName()
 {
-	return score;
+	return Name();
 }
 
-void Player::setScore(int score)
+std::string Player::getStringName()
 {
-	this->score = score;
+	std::string strName = "";
+	switch (name)
+	{
+	case Name::None:
+		strName = "None";
+		break;
+	case Name::FirstShooter:
+		strName = "FirstShooter";
+		break;
+	case Name::SecondShooter:
+		strName = "SecondShooter";
+		break;
+	default:
+		strName = "Error";
+		break;
+	}
+	return strName;
 }
+
+

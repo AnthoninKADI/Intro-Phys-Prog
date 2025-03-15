@@ -22,7 +22,7 @@ void InitializeFileSystem() {
 	if ( result ) {
 		printf( "ApplicationDirectory: %s\n", g_ApplicationDirectory );
 	} else {
-		printf( "ERROR: Unable to get current working directory!\n");
+		printf( "Unable to get current working directory!\n");
 	}
 }
 

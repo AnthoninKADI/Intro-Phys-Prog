@@ -4,8 +4,8 @@
 enum class Name
 {
 	None,
-	Player1,
-	Player2
+	FirstShooter,
+	SecondShooter
 };
 
 class Player
@@ -15,17 +15,14 @@ public:
 	~Player();
 
 public:
-	Name getName();
-	std::string getStringName();
 	int getShootLeft();
-	int getScore();
 	bool canShoot();
 	void shoot();
-	void setScore(int score);
 	void setShootLeft(int number);
+	Name getName();
+	std::string getStringName();
 
 private:
 	Name name;
-	int shootLeft = 3;
-	int score = 0;
+	int shootLeft = 99;
 };

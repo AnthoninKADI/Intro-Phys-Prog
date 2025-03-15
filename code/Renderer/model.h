@@ -76,7 +76,7 @@ public:
 	Model() : m_isVBO( false ) {}
 	~Model() {}
 
-	std::vector< vert_t > m_vertices;
+	std::vector< vert_t > vertices;
 	std::vector< unsigned int > m_indices;
 
 	bool BuildFromShape( const Shape * shape );
