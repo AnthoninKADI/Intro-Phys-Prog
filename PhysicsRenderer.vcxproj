@@ -19,90 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Body.cpp" />
     <ClCompile Include="code\application.cpp" />
-    <ClCompile Include="code\Bounds.cpp" />
+    <ClCompile Include="code\Ball.cpp" />
+    <ClCompile Include="code\Body.cpp" />
     <ClCompile Include="code\Broadphase.cpp" />
     <ClCompile Include="code\Contact.cpp" />
     <ClCompile Include="code\Fileio.cpp" />
-    <ClCompile Include="code\Intersections.cpp">
-      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <Optimization>Disabled</Optimization>
-      <SupportJustMyCode>true</SupportJustMyCode>
-      <AssemblerOutput>NoListing</AssemblerOutput>
-      <AssemblerListingLocation>PhysicsRenderer\x64\Debug\</AssemblerListingLocation>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <BrowseInformation>false</BrowseInformation>
-      <BrowseInformationFile>PhysicsRenderer\x64\Debug\</BrowseInformationFile>
-      <CompileAs>Default</CompileAs>
-      <ConformanceMode>Default</ConformanceMode>
-      <DiagnosticsFormat>Column</DiagnosticsFormat>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <ErrorReporting>Prompt</ErrorReporting>
-      <ExpandAttributedSource>false</ExpandAttributedSource>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Precise</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <GenerateModuleDependencies>false</GenerateModuleDependencies>
-      <GenerateSourceDependencies>false</GenerateSourceDependencies>
-      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ModuleDependenciesFile>PhysicsRenderer\x64\Debug\</ModuleDependenciesFile>
-      <ModuleOutputFile>PhysicsRenderer\x64\Debug\</ModuleOutputFile>
-      <OmitDefaultLibName>false</OmitDefaultLibName>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <ObjectFileName>PhysicsRenderer\x64\Debug\</ObjectFileName>
-      <CallingConvention>Cdecl</CallingConvention>
-      <ProgramDataBaseFileName>PhysicsRenderer\x64\Debug\vc143.pdb</ProgramDataBaseFileName>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>PhysicsRenderer\x64\Debug\PhysicsRenderer.pch</PrecompiledHeaderOutputFile>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <ShowIncludes>false</ShowIncludes>
-      <SourceDependenciesFile>PhysicsRenderer\x64\Debug\</SourceDependenciesFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <SpectreMitigation>false</SpectreMitigation>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <TrackerLogDirectory>PhysicsRenderer\x64\Debug\PhysicsRenderer.tlog\</TrackerLogDirectory>
-      <TranslateIncludes>false</TranslateIncludes>
-      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <UseFullPaths>true</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <XMLDocumentationFileName>PhysicsRenderer\x64\Debug\</XMLDocumentationFileName>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <IntelJCCErratum>false</IntelJCCErratum>
-      <BuildStlModules>false</BuildStlModules>
-      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>libs\vulkan_1.1.108.0\Include;libs\glfw-3.2.1.bin.WIN64\include;</AdditionalIncludeDirectories>
-      <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
+    <ClCompile Include="code\Intersections.cpp" />
     <ClCompile Include="code\main.cpp" />
     <ClCompile Include="code\Math\Bounds.cpp" />
     <ClCompile Include="code\Math\LCP.cpp" />
+    <ClCompile Include="code\Player.cpp" />
     <ClCompile Include="code\Renderer\Buffer.cpp" />
     <ClCompile Include="code\Renderer\Descriptor.cpp" />
     <ClCompile Include="code\Renderer\DeviceContext.cpp" />
@@ -116,12 +43,12 @@
     <ClCompile Include="code\Renderer\shader.cpp" />
     <ClCompile Include="code\Renderer\SwapChain.cpp" />
     <ClCompile Include="code\Scene.cpp" />
-    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="code\Shape.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Body.h" />
     <ClInclude Include="code\application.h" />
-    <ClInclude Include="code\Bounds.h" />
+    <ClInclude Include="code\Ball.h" />
+    <ClInclude Include="code\Body.h" />
     <ClInclude Include="code\Broadphase.h" />
     <ClInclude Include="code\Contact.h" />
     <ClInclude Include="code\Fileio.h" />
@@ -131,6 +58,7 @@
     <ClInclude Include="code\Math\Matrix.h" />
     <ClInclude Include="code\Math\Quat.h" />
     <ClInclude Include="code\Math\Vector.h" />
+    <ClInclude Include="code\Player.h" />
     <ClInclude Include="code\Renderer\Buffer.h" />
     <ClInclude Include="code\Renderer\Descriptor.h" />
     <ClInclude Include="code\Renderer\DeviceContext.h" />
@@ -144,7 +72,7 @@
     <ClInclude Include="code\Renderer\shader.h" />
     <ClInclude Include="code\Renderer\SwapChain.h" />
     <ClInclude Include="code\Scene.h" />
-    <ClInclude Include="Shape.h" />
+    <ClInclude Include="code\Shape.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -170,8 +98,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

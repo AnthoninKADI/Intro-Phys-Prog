@@ -69,8 +69,26 @@
     <ClCompile Include="code\Math\LCP.cpp">
       <Filter>code\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Body.cpp">
-      <Filter>code\Physics</Filter>
+    <ClCompile Include="code\Ball.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Body.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Broadphase.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Contact.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Intersections.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Player.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Shape.cpp">
+      <Filter>code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,11 +152,28 @@
     <ClInclude Include="code\Math\LCP.h">
       <Filter>code\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Body.h">
-      <Filter>code\Physics</Filter>
+    <ClInclude Include="code\Ball.h">
+      <Filter>code</Filter>
     </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>code\Physics</Filter>
+    <ClInclude Include="code\Body.h">
+      <Filter>code</Filter>
     </ClInclude>
+    <ClInclude Include="code\Broadphase.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Contact.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Intersections.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Player.h">
+      <Filter>code</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Shape.h">
+      <Filter>code</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
 </Project>
